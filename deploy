@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+# Go to the stack
+cd /srv/apps
+
+# Pull the latest changes
+git pull origin master
+
+# Pull new images for each container (1 at a time)
+for name in "$@"
+do
+  echo "Pulling $name"
+  docker-compose pull "$name"
+done
+
+# Re-up the container  (1 at a time)
+for name in "$@"
+do
+  echo "Restarting $name"
+  docker-compose up -d "$name"
+done
